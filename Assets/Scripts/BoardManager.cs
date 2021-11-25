@@ -14,6 +14,7 @@ public class BoardManager : MonoBehaviour
 
     public bool isShifting { get; set; } //|COMMENT|player is shifting candies?, getter and setter, so this class is only with RW permissions
 
+    private Candy selectedCandy;
 
 
     // Start is called before the first frame update
