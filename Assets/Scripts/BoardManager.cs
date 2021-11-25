@@ -19,19 +19,22 @@ public class BoardManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (sharedInstance == null){    //checks if a BoardManager script is alredy running
+        if (sharedInstance == null)    //checks if a BoardManager script is alredy running
+        {
             sharedInstance = this;  //if there is no boardManager script running, this one becomes the shared Instance
-        } else{
+        } 
+        else
+        {
             Destroy(gameObject);    // If there's a BoardManager already, this one gets destroyed
         }
 
         Vector2 offset = currentCandy.GetComponent<BoxCollider2D>().size;   //Stores the size for each candy in offset
-
+        CreateInitialBoard(offset); // Calls the method to create board on start
 
     }
 
 
-    private void createInitialBoard(Vector2 offset){    //Method to setup board, offset is the candies' size
+    private void CreateInitialBoard(Vector2 offset){    //Method to setup board, offset is the candies' size
         candies = candies = new GameObject[xSize,ySize]; //We create a matrix with xSize columns
 
         float startX = this.transform.position.x; //The x coordinate to start creation of candies
@@ -48,7 +51,7 @@ public class BoardManager : MonoBehaviour
                     0),   //No depth
                     currentCandy.transform.rotation); // With the same rotation as original
 
-                newCandy.name = string.Format("Candy[{0}]_[{1}]",x,y);  //We name the current candy "candyXY", eg candy0_0 for 1st
+                newCandy.name = string.Format("Candy[{0}][{1}]",x,y);  //We name the current candy "candyXY", eg candy[0][0] for 1st
                 candies[x,y] = newCandy;    //we store the new candy on the candy matrix
             }
         }
