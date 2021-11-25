@@ -6,13 +6,13 @@ public class BoardManager : MonoBehaviour
 {
 
     public static BoardManager sharedInstance;  //Set this script as singleton so no other like this can be called
-    public list<Sprite> prefabs = new list<Sprite>();    //A list for sprites, not technically prefabs, to store graphics
+    public List<Sprite> prefabs = new List<Sprite>();    //A list for sprites, not technically prefabs, to store graphics
     public GameObject currentCandy; //the candy selected
     public int xSize, ySize;    // the size for the board
     
     private GameObject[,] candies; //A gameobject matrix for storing all candies on board
 
-    public bool isShifting = {get,set}; //player is shifting candies?, getter and setter, so this class is only with RW permissions
+    public bool isShifting { get; set; } //|COMMENT|player is shifting candies?, getter and setter, so this class is only with RW permissions
 
 
 
@@ -30,7 +30,29 @@ public class BoardManager : MonoBehaviour
 
     }
 
+
     private void createInitialBoard(Vector2 offset){    //Method to setup board, offset is the candies' size
+        candies = candies = new GameObject[xSize,ySize]; //We create a matrix with xSize columns
+
+        float startX = this.transform.position.x; //The x coordinate to start creation of candies
+        float startY = this.transform.position.y; //The y coordinate to start creation of candies
+
+        // This is a double loop to instantiate a candy per cell
+        for (int x = 0; x < xSize; x++){    //Iterates over all columns
+            for (int y = 0; y < ySize; y++){    //Iterates over all rows
+                GameObject newCandy = Instantiate(  //We instantiate a prefab using instantiate method...
+                currentCandy,   //Which candy will be put in
+                new Vector3(   
+                    startX + (offset.x*x), //...on the x_i position...
+                    startY + (offset.y*y), //... and the y_j position
+                    0),   //No depth
+                    currentCandy.transform.rotation); // With the same rotation as original
+
+                newCandy.name = string.Format("Candy[{0}]_[{1}]",x,y);  //We name the current candy "candyXY", eg candy0_0 for 1st
+                candies[x,y] = newCandy;    //we store the new candy on the candy matrix
+            }
+        }
+
     }
 
     // Update is called once per frame
