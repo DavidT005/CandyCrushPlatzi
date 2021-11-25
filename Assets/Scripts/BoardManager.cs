@@ -34,11 +34,19 @@ public class BoardManager : MonoBehaviour
     }
 
 
-    private void CreateInitialBoard(Vector2 offset){    //Method to setup board, offset is the candies' size
+    private void CreateInitialBoard(Vector2 offset){    //Method to setup board, offset is the candies' size. starts on bottom left
         candies = candies = new GameObject[xSize,ySize]; //We create a matrix with xSize columns
 
         float startX = this.transform.position.x; //The x coordinate to start creation of candies
         float startY = this.transform.position.y; //The y coordinate to start creation of candies
+
+
+
+
+
+        int idx = -1;   //A dummy value for the ID of candies
+
+
 
         // This is a double loop to instantiate a candy per cell
         for (int x = 0; x < xSize; x++){    //Iterates over all columns
@@ -52,7 +60,24 @@ public class BoardManager : MonoBehaviour
                     currentCandy.transform.rotation); // With the same rotation as original
 
                 newCandy.name = string.Format("Candy[{0}][{1}]",x,y);  //We name the current candy "candyXY", eg candy[0][0] for 1st
+                
+                // This do while checks no candies of the same type are next to each other...
+                do
+                {
+                    idx = Random.Range(0, prefabs.Count);   //...by creating new ID...
+                }while( (x > 0 && idx == candies[x-1,y].GetComponent<Candy>().id )||  //..checking it's different than one on left...
+                (y>0 && idx == candies[x,y-1].GetComponent<Candy>().id)); //... and one below
+                // If one of these two conditions is met, then a new idx is created until no match
+
+                
+                Sprite sprite = prefabs[idx]; //Saves a random sprite from the sprite array
+                newCandy.GetComponent<SpriteRenderer>().sprite = sprite;    //Uses the randomly selected sprite for the new candy
+                newCandy.GetComponent<Candy>().id = idx; //Stores the ID for the specific candy
+                
+                
+                newCandy.transform.parent = transform;  //We set the new candy as a child of the BoardManager game object
                 candies[x,y] = newCandy;    //we store the new candy on the candy matrix
+
             }
         }
 
