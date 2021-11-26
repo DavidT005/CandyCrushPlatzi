@@ -12,10 +12,11 @@ public class BoardManager : MonoBehaviour
     
     private GameObject[,] candies; //A gameobject matrix for storing all candies on board
 
-    public bool isShifting { get; set; } //|COMMENT|player is shifting candies?, getter and setter, so this class is only with RW permissions
+    public bool isShifting { get; set; } //|EXPLAIN|player is shifting candies?, getter and setter, so this class is only with RW permissions
 
-    private Candy selectedCandy;
+    private Candy selectedCandy;    // A variable to store which is the currently selected candy
 
+    public const int MinCandiesToMatch = 2; // the minumun number neighboring candies needed to match
 
     // Start is called before the first frame update
     void Start()
@@ -84,9 +85,4 @@ public class BoardManager : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
