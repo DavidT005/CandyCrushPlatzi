@@ -64,7 +64,9 @@ public class Candy : MonoBehaviour
                 if (CanSwipe()) //Runs if candies are switchable
                 {
                     SwapSprite(previousSelected);   //Switched the candies sprites and ids
+                    previousSelected.FindAllMatches();  //The candy checks for matches for previous candy
                     previousSelected.DeselectCandy();   //Deselects previous candy
+                    FindAllMatches();   //Makes current candy find all its matches
 
                 }
                 else    //Runs if candies are not switchable
