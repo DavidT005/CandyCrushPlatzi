@@ -111,7 +111,7 @@ public class BoardManager : MonoBehaviour
 
     }
 
-    private IEnumerator MakeCandiesFall(int x, int yStart, float shiftDelay = 0.05f)    // A method to make candies fall
+    private IEnumerator MakeCandiesFall(int x, int yStart, float shiftDelay = 0.2f)    // A method to make candies fall
     {
         isShifting = true;  //Sets isShifting to true so dependent processes don't rund in parallel
 
@@ -132,7 +132,10 @@ public class BoardManager : MonoBehaviour
 
         for (int i = 0; i < nullCandies; i++)
         {
-            yield return new WaitForSeconds(shiftDelay);    //Waits for the specified ammount of time
+
+            GUIManager.sharedInstance.Score +=10;    //Adds 10 pints per destroyed candy
+
+            yield return new WaitForSeconds(shiftDelay);    //Waits for the specified ammount of time for the candy to fall
             for (int j = 0; j < renderers.Count-1; j++) 
             {
                 renderers[j].sprite = renderers[j+1].sprite;    //Puts the sprite for candy above on current candy

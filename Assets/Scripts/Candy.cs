@@ -67,6 +67,8 @@ public class Candy : MonoBehaviour
                     previousSelected.FindAllMatches();  //The candy checks for matches for previous candy
                     previousSelected.DeselectCandy();   //Deselects previous candy
                     FindAllMatches();   //Makes current candy find all its matches
+
+                    GUIManager.sharedInstance.MoveCounter--; //We substract one move
                 }
                 else    //Runs if candies are not switchable
                 {
