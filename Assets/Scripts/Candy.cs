@@ -67,7 +67,6 @@ public class Candy : MonoBehaviour
                     previousSelected.FindAllMatches();  //The candy checks for matches for previous candy
                     previousSelected.DeselectCandy();   //Deselects previous candy
                     FindAllMatches();   //Makes current candy find all its matches
-
                 }
                 else    //Runs if candies are not switchable
                 {
@@ -197,7 +196,10 @@ public class Candy : MonoBehaviour
 
         if(hMatch || vMatch)    //Checks if there was a match
         {
+
             spriteRenderer.sprite = null;   //Removes the candy sprite in the selected cell
+            StopCoroutine(BoardManager.sharedInstance.FindNullCandies()); //Stopes this corroutine in case it's already running
+            StartCoroutine(BoardManager.sharedInstance.FindNullCandies());    //Starts the courrutine so no null candy is left on screen
         }
 
 

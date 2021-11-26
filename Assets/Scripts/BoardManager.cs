@@ -83,6 +83,94 @@ public class BoardManager : MonoBehaviour
             }
         }
 
+    }   
+
+
+    public IEnumerator FindNullCandies()    // Method to find holes for candies
+    {
+        for(int x = 0; x < xSize; x++)
+        {
+            for(int y = 0; y < xSize; y++)
+            {
+                if(candies[x,y].GetComponent<SpriteRenderer>().sprite == null)  //Checks if no candy sprite
+                {
+                    yield return StartCoroutine(MakeCandiesFall(x,y)); //Waits until MakeCandiesFall() stops executing
+                    break;
+                }
+            }
+        }
+
+        // We check if there are new matches for all new candies
+        for (int x = 0; x < xSize; x++)
+        {
+            for (int y = 0; y < ySize; y++)
+            {
+                candies[x,y].GetComponent<Candy>().FindAllMatches();
+            }
+        }
+
     }
+
+    private IEnumerator MakeCandiesFall(int x, int yStart, float shiftDelay = 0.05f)    // A method to make candies fall
+    {
+        isShifting = true;  //Sets isShifting to true so dependent processes don't rund in parallel
+
+
+        List<SpriteRenderer> renderers = new List<SpriteRenderer>();    // A list to save all sprite renderers
+        int nullCandies = 0;    // Var to store null qty
+
+        for(int y = yStart; y < ySize; y++) // starts to search null candies from first null candy 
+        {
+            SpriteRenderer spriteRenderer = candies[x,y].GetComponent<SpriteRenderer>();  //Gets the SpriteRenderer for current position
+            if(spriteRenderer.sprite == null) //Checks if there's a sprite
+            {
+                nullCandies++;  //We add one to the total null candies
+            }
+
+            renderers.Add(spriteRenderer);   //Adds the sprite renderer to the list to store it
+        }
+
+        for (int i = 0; i < nullCandies; i++)
+        {
+            yield return new WaitForSeconds(shiftDelay);    //Waits for the specified ammount of time
+            for (int j = 0; j < renderers.Count-1; j++) 
+            {
+                renderers[j].sprite = renderers[j+1].sprite;    //Puts the sprite for candy above on current candy
+                renderers[j+1].sprite = GetNewCandy(x, ySize-1);   //Creates a new candy on the top of the board
+            }
+        }
+
+
+
+        isShifting = false;  //Sets isShifting to false again
+    }
+
+    private Sprite GetNewCandy(int x, int y)  //Method to create new candies to fillup spaces
+    {
+        List<Sprite> possibleCandies = new List<Sprite>();  //A list to store all possible candies to create
+        possibleCandies.AddRange(prefabs);  // We add the prefabs to the list, we need to add them so it's a copy, not a reference
+
+        if (x>0)
+        {
+            possibleCandies.Remove(candies[x-1,y].GetComponent<SpriteRenderer>().sprite); //Removes candie next to current one from possible sprites
+        }
+        
+        if (x<xSize - 1)
+        {
+            possibleCandies.Remove(candies[x+1,y].GetComponent<SpriteRenderer>().sprite); //Removes candie next to current one from possible sprites
+        }
+
+        if (y > 0)
+        {
+            possibleCandies.Remove(candies[x,y-1].GetComponent<SpriteRenderer>().sprite); //Removes candie below current one from possible sprites
+        }
+
+        return possibleCandies[Random.Range(0,possibleCandies.Count)];  //Selects the number for the candy sprite from possible vals
+
+
+    }
+
+
+
 
 }
